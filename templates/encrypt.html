@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Encryption - AI CryptoDetect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #0099cc;
+            --secondary: #ff6b6b;
+            --accent: #4ecdc4;
+            --warning: #ffe66d;
+            --success: #06ffa5;
+            --error: #ff4757;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #1a1a24;
+            --bg-tertiary: #2a2a3a;
+            --bg-glass: rgba(255, 255, 255, 0.05);
+            --bg-glass-strong: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b4b4;
+            --text-muted: #666666;
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --shadow-glow: 0 0 30px rgba(0, 212, 255, 0.3);
+            --shadow-strong: 0 20px 40px rgba(0, 0, 0, 0.6);
+            --gradient-primary: linear-gradient(135deg, #00d4ff 0%, #4ecdc4 100%);
+            --gradient-secondary: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            --gradient-bg: linear-gradient(135deg, #0a0a0f 0%, #1a1a24 100%);
+            --gradient-card: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+        }
+
+        /* Light theme variables */
+        body.light-theme {
+            --primary: #0099cc;
+            --primary-dark: #007acc;
+            --secondary: #e74c3c;
+            --accent: #2ecc71;
+            --warning: #f39c12;
+            --success: #27ae60;
+            --error: #e74c3c;
+            --bg-primary: #f8f9fa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e9ecef;
+            --bg-glass: rgba(0, 0, 0, 0.05);
+            --bg-glass-strong: rgba(0, 0, 0, 0.1);
+            --text-primary: #2c3e50;
+            --text-secondary: #6c757d;
+            --text-muted: #adb5bd;
+            --border-glass: rgba(0, 0, 0, 0.1);
+            --shadow-glow: 0 0 30px rgba(0, 153, 204, 0.3);
+            --shadow-strong: 0 20px 40px rgba(0, 0, 0, 0.1);
+            --gradient-primary: linear-gradient(135deg, #0099cc 0%, #2ecc71 100%);
+            --gradient-secondary: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            --gradient-bg: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            --gradient-card: linear-gradient(135deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.05) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--gradient-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glass);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        body.light-theme .header {
+            background: rgba(248, 249, 250, 0.8);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-secondary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-right: auto;
+            margin-left: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary);
+        }
+
+        .nav-link.active {
+            color: var(--secondary);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-secondary);
+        }
+
+        /* Dynamic navbar colors */
+        .nav-link.active-red {
+            color: #ff4757 !important;
+        }
+
+        .nav-link.active-red::after {
+            background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%) !important;
+        }
+
+        .nav-link.active-yellow {
+            color: #ffe66d !important;
+        }
+
+        .nav-link.active-yellow::after {
+            background: linear-gradient(135deg, #ffe66d 0%, #f39c12 100%) !important;
+        }
+
+        /* Dynamic logo colors */
+        .logo.logo-red {
+            background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+
+        .logo.logo-red .logo-icon {
+            background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%) !important;
+        }
+
+        .logo.logo-yellow {
+            background: linear-gradient(135deg, #ffe66d 0%, #f39c12 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+
+        .logo.logo-yellow .logo-icon {
+            background: linear-gradient(135deg, #ffe66d 0%, #f39c12 100%) !important;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            color: var(--text-primary);
+            padding: 0.75rem 1.25rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-glass-strong);
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.3), 0 0 30px rgba(255, 107, 107, 0.4);
+            transform: translateY(-3px) scale(1.05);
+            border-color: var(--secondary);
+        }
+
+        .theme-icon {
+            position: relative;
+            font-size: 1.2rem;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 2;
+        }
+
+        .theme-text {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .ai-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-glass);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            border: 1px solid var(--border-glass);
+            font-size: 0.875rem;
+        }
+
+        .ai-indicator {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        /* Main Content */
+        .main-container {
+            margin-top: 80px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 107, 107, 0.1) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.3)); }
+            to { filter: drop-shadow(0 0 40px rgba(255, 107, 107, 0.6)); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            font-weight: 300;
+        }
+
+        .feature-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .feature-badge {
+            background: var(--bg-glass);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            border: 1px solid var(--border-glass);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Encryption Interface */
+        .encryption-interface {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .interface-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .interface-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-strong);
+            border-color: var(--primary);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            background: var(--gradient-secondary);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 2px dashed var(--border-glass);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            background: rgba(255, 107, 107, 0.02);
+            margin-bottom: 2rem;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.drag-over {
+            border-color: var(--secondary);
+            background: rgba(255, 107, 107, 0.08);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .upload-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtext {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .form-select,
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            background: var(--bg-glass);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-select {
+            background-color: var(--bg-secondary);
+            cursor: pointer;
+        }
+
+        .form-select option {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 0.5rem;
+        }
+
+        body.light-theme .form-select {
+            background-color: var(--bg-secondary);
+        }
+
+        body.light-theme .form-select option {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .form-select:focus,
+        .form-input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .encrypt-btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--gradient-secondary);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .encrypt-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .encrypt-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Results Display */
+        .results-section {
+            grid-column: 1 / -1;
+            margin-top: 2rem;
+        }
+
+        .results-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            display: none;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .results-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-secondary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .download-btn {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .download-btn:hover {
+            background: var(--bg-glass-strong);
+            transform: translateY(-2px);
+        }
+
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .detail-item {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .detail-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--primary);
+            word-break: break-all;
+        }
+
+        .preview-box {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            word-break: break-all;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 500;
+            border: 1px solid;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-success {
+            background: rgba(6, 255, 165, 0.1);
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(255, 71, 87, 0.1);
+            color: var(--error);
+            border-color: var(--error);
+        }
+
+        .alert-warning {
+            background: rgba(255, 230, 109, 0.1);
+            color: var(--warning);
+            border-color: var(--warning);
+        }
+
+        /* Loading */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(10px);
+        }
+
+        body.light-theme .loading-overlay {
+            background: rgba(248, 249, 250, 0.8);
+        }
+
+        .loading-content {
+            text-align: center;
+            background: var(--gradient-card);
+            padding: 3rem;
+            border-radius: 24px;
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(20px);
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: var(--gradient-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .loading-subtext {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        /* Share & QR Styles */
+        .share-section {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .share-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .share-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--primary);
+        }
+
+        .share-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .share-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .action-btn:hover {
+            background: var(--bg-glass-strong);
+            transform: translateY(-2px);
+        }
+
+        .share-btn {
+            background: var(--gradient-secondary);
+            color: white;
+            border: none;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .share-link-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .expiry-selection {
+            margin-bottom: 1rem;
+        }
+
+        .share-result {
+            margin-top: 1rem;
+        }
+
+        .share-link-display {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .share-link-display .form-input {
+            flex: 1;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+        }
+
+        .copy-btn {
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .share-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .share-detail {
+            background: var(--bg-glass);
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-glass);
+            font-size: 0.875rem;
+        }
+
+        .share-detail .detail-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .share-detail .detail-value {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .encryption-interface {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .main-container {
+                padding: 1rem;
+            }
+
+            .share-content {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .share-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <span>AI CryptoDetect</span>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/encrypt" class="nav-link active">File Encryption</a>
+                <a href="/compare" class="nav-link">Compare Algorithms</a>
+                <a href="/steganography" class="nav-link">Steganography</a>
+                <a href="/file-converter" class="nav-link">File Converter</a>
+            </div>
+            
+            <div class="nav-controls">
+                <div class="ai-status">
+                    <div class="ai-indicator"></div>
+                    <span>Encryption Ready</span>
+                </div>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="theme-icon fas fa-adjust"></i>
+                    <span class="theme-text">Toggle Theme</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Hero Section -->
+<section class="hero fade-in-up">
+            <h1 class="hero-title">Advanced File Encryption</h1>
+            <p class="hero-subtitle">
+                Secure your files with professional-grade encryption algorithms. 
+                Support for AES, DES, RC4, ChaCha20, and RSA with custom key options.
+            </p>
+            <div class="feature-badges">
+                <div class="feature-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Military-Grade Security</span>
+                </div>
+                <div class="feature-badge">
+                    <i class="fas fa-key"></i>
+                    <span>Custom Keys</span>
+                </div>
+                <div class="feature-badge">
+                    <i class="fas fa-download"></i>
+                    <span>Instant Download</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Encryption Interface -->
+        <section class="encryption-interface">
+            <!-- Upload & Configuration Card -->
+            <div class="interface-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title">File Encryption</h3>
+                        <p class="card-description">Upload and encrypt your files securely</p>
+                    </div>
+                </div>
+
+                <form id="encryptionForm">
+                    <!-- File Upload -->
+<div class="upload-zone fade-in-up" id="uploadZone">
+                        <div class="upload-icon">
+                            <i class="fas fa-file-upload"></i>
+                        </div>
+                        <div class="upload-text">Drop your file here</div>
+                        <div class="upload-subtext">or click to browse</div>
+                        <input type="file" id="fileInput" style="display: none;">
+                    </div>
+
+                    <!-- Algorithm Selection -->
+                    <div class="form-group">
+                        <label class="form-label" for="algorithm">Encryption Algorithm</label>
+                        <select class="form-select" id="algorithm" name="algorithm">
+                            <option value="AES">AES (Advanced Encryption Standard)</option>
+                            <option value="DES">DES (Data Encryption Standard)</option>
+                            <option value="RC4">RC4 (Rivest Cipher 4)</option>
+                            <option value="ChaCha20">ChaCha20 (Stream Cipher)</option>
+                            <option value="RSA">RSA (Rivest-Shamir-Adleman)</option>
+                        </select>
+                    </div>
+
+                    <!-- Custom Key Input -->
+                    <div class="form-group">
+                        <label class="form-label" for="customKey">Custom Key (Optional)</label>
+                        <input type="text" class="form-input" id="customKey" name="custom_key" 
+                               placeholder="Enter custom key (text or hex) or leave empty for auto-generation">
+                    </div>
+
+                    <!-- Encrypt Button -->
+                    <button type="submit" class="encrypt-btn" id="encryptBtn">
+                        <i class="fas fa-lock"></i>
+                        <span>Encrypt File</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Algorithm Info Card -->
+            <div class="interface-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title">Algorithm Details</h3>
+                        <p class="card-description">Information about selected encryption method</p>
+                    </div>
+                </div>
+
+                <div id="algorithmInfo">
+                    <div class="detail-item">
+                        <div class="detail-label">Selected Algorithm</div>
+                        <div class="detail-value" id="selectedAlgo">AES (Advanced Encryption Standard)</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Security Level</div>
+                        <div class="detail-value" id="securityLevel">Very High</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Key Length</div>
+                        <div class="detail-value" id="keyLength">128/192/256 bits</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Block Size</div>
+                        <div class="detail-value" id="blockSize">128 bits</div>
+                    </div>
+
+                    <div class="preview-box" id="algorithmDescription">
+                        AES is a specification for the encryption of electronic data established by the U.S. National Institute of Standards and Technology (NIST). It is widely used across the globe and is considered the gold standard for data encryption.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section">
+<div class="results-card slide-in-right" id="resultsCard">
+                    <div class="results-header">
+                        <div class="results-title">
+                            <div class="results-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <span>Encryption Complete</span>
+                        </div>
+                        <button class="download-btn" id="downloadBtn">
+                            <i class="fas fa-download"></i>
+                            <span>Download</span>
+                        </button>
+                    </div>
+
+                    <div class="result-details" id="resultDetails">
+                        <!-- Results will be populated here -->
+                    </div>
+
+                    <div class="preview-box" id="previewBox">
+                        <!-- Preview will be shown here -->
+                    </div>
+
+                    <!-- Share Link Section -->
+                    <div class="share-section" id="shareSection" style="display: none;">
+                        <div class="share-header">
+                            <h4 class="share-title">
+                                <i class="fas fa-share-alt"></i>
+                                Share Link
+                            </h4>
+                            <p class="share-description">Generate a shareable link for your encrypted file</p>
+                        </div>
+
+                        <div class="share-content">
+                            <!-- Share Link Section -->
+                            <div class="share-link-section">
+                                <div class="expiry-selection">
+                                    <label class="form-label" for="expiryTime">Link Expiry</label>
+                                    <select class="form-select" id="expiryTime">
+                                        <option value="5">5 Minutes</option>
+                                        <option value="60" selected>1 Hour</option>
+                                        <option value="720">12 Hours</option>
+                                        <option value="1440">1 Day</option>
+                                        <option value="10080">1 Week</option>
+                                    </select>
+                                </div>
+                                
+                                <button class="action-btn share-btn" id="generateShareBtn">
+                                    <i class="fas fa-link"></i>
+                                    <span>Generate Shareable Link</span>
+                                </button>
+
+                                <div class="share-result" id="shareResult" style="display: none;">
+                                    <div class="share-link-display">
+                                        <input type="text" class="form-input" id="shareLink" readonly>
+                                        <button class="copy-btn" id="copyLinkBtn" title="Copy to clipboard">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                    <div class="share-info">
+                                        <div class="share-detail">
+                                            <span class="detail-label">Expires:</span>
+                                            <span class="detail-value" id="expiryDisplay"></span>
+                                        </div>
+                                        <div class="share-detail">
+                                            <span class="detail-label">Access:</span>
+                                            <span class="detail-value">One-time download</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner">
+                <i class="fas fa-lock"></i>
+            </div>
+            <div class="loading-text">Encrypting File</div>
+            <div class="loading-subtext">Please wait while we secure your data...</div>
+        </div>
+    </div>
+
+    <script>
+        // Algorithm information database
+        const algorithmInfo = {
+            AES: {
+                name: 'AES (Advanced Encryption Standard)',
+                security: 'Very High',
+                keyLength: '128/192/256 bits',
+                blockSize: '128 bits',
+                description: 'AES is a specification for the encryption of electronic data established by the U.S. National Institute of Standards and Technology (NIST). It is widely used across the globe and is considered the gold standard for data encryption.'
+            },
+            DES: {
+                name: 'DES (Data Encryption Standard)',
+                security: 'Low (Legacy)',
+                keyLength: '56 bits',
+                blockSize: '64 bits',
+                description: 'DES is a legacy symmetric-key algorithm for the encryption of digital data. Although now considered insecure due to its small key size, it laid the foundation for modern encryption standards.'
+            },
+            RC4: {
+                name: 'RC4 (Rivest Cipher 4)',
+                security: 'Medium',
+                keyLength: '40-2048 bits',
+                blockSize: 'Stream Cipher',
+                description: 'RC4 is a stream cipher designed by Ron Rivest. It is notable for its simplicity and speed in software, but weaknesses have been discovered that make it unsuitable for new systems.'
+            },
+            ChaCha20: {
+                name: 'ChaCha20 (Stream Cipher)',
+                security: 'Very High',
+                keyLength: '256 bits',
+                blockSize: 'Stream Cipher',
+                description: 'ChaCha20 is a stream cipher developed by Daniel J. Bernstein. It is designed to be faster than AES in software-only implementations, while maintaining the same security level.'
+            },
+            RSA: {
+                name: 'RSA (Rivest-Shamir-Adleman)',
+                security: 'Very High',
+                keyLength: '1024-4096 bits',
+                blockSize: 'Asymmetric',
+                description: 'RSA is a public-key cryptosystem that is widely used for secure data transmission. It uses hybrid encryption combining RSA with AES for optimal security and performance.'
+            }
+        };
+
+        // Theme toggle functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeThemeToggle();
+            updateAlgorithmInfo();
+            applyNavbarColors();
+        });
+
+        // Apply dynamic navbar colors based on current page
+        function applyNavbarColors() {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            navLinks.forEach(link => {
+                // Remove existing dynamic colors
+                link.classList.remove('active-red', 'active-yellow');
+                
+                if (link.getAttribute('href') === '/encrypt' && currentPath === '/encrypt') {
+                    link.classList.add('active-red');
+                } else if (link.getAttribute('href') === '/compare' && currentPath === '/compare') {
+                    link.classList.add('active-yellow');
+                }
+            });
+        }
+
+        function initializeThemeToggle() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('.theme-icon');
+            const themeText = themeToggle.querySelector('.theme-text');
+            
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            applyTheme(savedTheme);
+            
+            // Theme toggle click handler
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.body.classList.contains('light-theme') ? 'light' : 'dark';
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                applyTheme(newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+            
+            function applyTheme(theme) {
+                if (theme === 'light') {
+                    document.body.classList.add('light-theme');
+                    themeIcon.className = 'theme-icon fas fa-sun';
+                    themeText.textContent = 'Light Mode';
+                } else {
+                    document.body.classList.remove('light-theme');
+                    themeIcon.className = 'theme-icon fas fa-moon';
+                    themeText.textContent = 'Dark Mode';
+                }
+            }
+        }
+
+        // File upload functionality
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const algorithmSelect = document.getElementById('algorithm');
+        
+        let selectedFile = null;
+
+        uploadZone.addEventListener('click', () => fileInput.click());
+        
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('drag-over');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('drag-over');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('drag-over');
+            handleFile(e.dataTransfer.files[0]);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            if (file) {
+                selectedFile = file;
+                const uploadText = uploadZone.querySelector('.upload-text');
+                const uploadSubtext = uploadZone.querySelector('.upload-subtext');
+                
+                uploadText.textContent = file.name;
+                uploadSubtext.textContent = `${formatFileSize(file.size)} - Ready to encrypt`;
+                
+                // Change icon to indicate file is loaded
+                const uploadIcon = uploadZone.querySelector('.upload-icon i');
+                uploadIcon.className = 'fas fa-file-check';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Algorithm selection handler
+        algorithmSelect.addEventListener('change', updateAlgorithmInfo);
+
+        function updateAlgorithmInfo() {
+            const selected = algorithmSelect.value;
+            const info = algorithmInfo[selected];
+            
+            document.getElementById('selectedAlgo').textContent = info.name;
+            document.getElementById('securityLevel').textContent = info.security;
+            document.getElementById('keyLength').textContent = info.keyLength;
+            document.getElementById('blockSize').textContent = info.blockSize;
+            document.getElementById('algorithmDescription').textContent = info.description;
+        }
+
+        // Form submission
+        document.getElementById('encryptionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!selectedFile) {
+                showAlert('Please select a file to encrypt.', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('algorithm', algorithmSelect.value);
+            formData.append('custom_key', document.getElementById('customKey').value);
+
+            showLoading(true);
+
+            try {
+                const response = await fetch('/encrypt_file', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResults(result);
+                    showAlert('File encrypted successfully!', 'success');
+                } else {
+                    showAlert(result.error || 'Encryption failed', 'error');
+                }
+            } catch (error) {
+                showAlert('Error: ' + error.message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        });
+
+        function showLoading(show) {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const encryptBtn = document.getElementById('encryptBtn');
+            
+            loadingOverlay.style.display = show ? 'flex' : 'none';
+            encryptBtn.disabled = show;
+            
+            if (show) {
+                encryptBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Encrypting...</span>';
+            } else {
+                encryptBtn.innerHTML = '<i class="fas fa-lock"></i><span>Encrypt File</span>';
+            }
+        }
+
+        function showResults(result) {
+            const resultsCard = document.getElementById('resultsCard');
+            const resultDetails = document.getElementById('resultDetails');
+            const previewBox = document.getElementById('previewBox');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const shareSection = document.getElementById('shareSection');
+
+            // Store current result for sharing functionality
+            currentResult = result;
+
+            // Show results card
+            resultsCard.style.display = 'block';
+
+            // Populate result details
+            resultDetails.innerHTML = `
+                <div class="detail-item">
+                    <div class="detail-label">Algorithm Used</div>
+                    <div class="detail-value">${result.algorithm}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Original File</div>
+                    <div class="detail-value">${selectedFile.name}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Encrypted File</div>
+                    <div class="detail-value">${result.filename}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">File Size</div>
+                    <div class="detail-value">${formatFileSize(result.file_size)}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Encryption Key</div>
+                    <div class="detail-value">${result.key_used.substring(0, 20)}...</div>
+                </div>
+            `;
+
+            // Show preview
+            previewBox.innerHTML = `<strong>Encrypted Data Preview (Base64):</strong><br>${result.preview}...`;
+
+            // Setup download button
+            downloadBtn.onclick = () => downloadEncryptedFile(result);
+
+            // Show share section
+            shareSection.style.display = 'block';
+
+            // Scroll to results
+            resultsCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function downloadEncryptedFile(result) {
+            const binaryData = atob(result.encrypted_data);
+            const bytes = new Uint8Array(binaryData.length);
+            
+            for (let i = 0; i < binaryData.length; i++) {
+                bytes[i] = binaryData.charCodeAt(i);
+            }
+            
+            const blob = new Blob([bytes], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = result.filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            URL.revokeObjectURL(url);
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check' : type === 'warning' ? 'exclamation-triangle' : 'times'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.querySelector('.main-container').insertBefore(alertDiv, document.querySelector('.encryption-interface'));
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // Share functionality
+        let currentResult = null;
+
+        // Event listeners for Share functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            // Share link generation
+            document.getElementById('generateShareBtn').addEventListener('click', generateShareLink);
+            document.getElementById('copyLinkBtn').addEventListener('click', copyShareLink);
+        });
+
+
+        async function generateShareLink() {
+            if (!currentResult) {
+                showAlert('No encryption result available to share.', 'error');
+                return;
+            }
+
+            const expiryTime = document.getElementById('expiryTime');
+            const shareBtn = document.getElementById('generateShareBtn');
+            const shareResult = document.getElementById('shareResult');
+            const shareLink = document.getElementById('shareLink');
+            const expiryDisplay = document.getElementById('expiryDisplay');
+            
+            // Show loading state
+            shareBtn.disabled = true;
+            shareBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            
+            try {
+                const expiryMinutes = parseInt(expiryTime.value);
+                const expiryHours = expiryMinutes / 60; // Convert minutes to hours
+                const response = await fetch('/generate_share_link', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        encrypted_data: currentResult.encrypted_data,
+                        filename: currentResult.filename,
+                        algorithm: currentResult.algorithm,
+                        expiry_hours: expiryHours
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    shareLink.value = data.share_url;
+                    expiryDisplay.textContent = data.expires_at;
+                    shareResult.style.display = 'block';
+                    
+                    showAlert('Share link generated successfully!', 'success');
+                } else {
+                    throw new Error(data.error || 'Failed to generate share link');
+                }
+            } catch (error) {
+                console.error('Share link generation error:', error);
+                showAlert('Failed to generate share link. Please try again.', 'error');
+            } finally {
+                // Reset button state
+                shareBtn.disabled = false;
+                shareBtn.innerHTML = '<i class="fas fa-link"></i> Generate Shareable Link';
+            }
+        }
+
+        function copyShareLink() {
+            const shareLink = document.getElementById('shareLink');
+            const copyBtn = document.getElementById('copyLinkBtn');
+            
+            try {
+                shareLink.select();
+                shareLink.setSelectionRange(0, 99999); // For mobile devices
+                document.execCommand('copy');
+                
+                // Visual feedback
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                copyBtn.style.background = '#28a745';
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                    copyBtn.style.background = '';
+                }, 2000);
+                
+                showAlert('Share link copied to clipboard!', 'success');
+            } catch (error) {
+                console.error('Copy error:', error);
+                showAlert('Failed to copy link. Please copy manually.', 'error');
+            }
+        }
+    </script>
+</body>
+</html>
